@@ -1,0 +1,82 @@
+# ─── 파이썬 일반 ───────────────────────────────────────────────────
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# 가상환경
+.env/
+venv/
+ENV/
+env/
+.venv/
+
+# 파이썬 패키지 배포 아티팩트
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+wheels/
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# mypy, pyright
+.mypy_cache/
+.pyre/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# IDE / 에디터
+.vscode/
+.idea/
+*.swp
+*~
+
+# 시스템 파일
+.DS_Store
+Thumbs.db
+
+# ─── 프로젝트 특화 ─────────────────────────────────────────────────
+# 모델 체크포인트
+*.pt
+*.pth
+
+# Torch 라이브러리 바이너리 (예: libtorch_cpu.dylib)
+*.dylib
+
+# 대용량 데이터 / 이미지 폴더
+newClip/
+images/
+
+# 캐시 / 로그
+*.log
+*.tmp
+
+
+images/
+CLIP/
+
+*.pt
+*.pth
