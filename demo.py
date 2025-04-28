@@ -1,12 +1,9 @@
-# Gradio를 이용한 검색 GUI 구현
-
 import os
 import numpy as np
 import pandas as pd
 import torch
 from PIL import Image
 import gradio as gr
-from gradio.themes import XKCD
 from tqdm import tqdm
 from transformers import DistilBertTokenizer
 from config import CFG
@@ -22,14 +19,16 @@ model.eval()
 
 tokenizer = DistilBertTokenizer.from_pretrained(CFG.text_encoder_model)
 
-# 2) 이미지 파일 목록 및 임베딩 계산
-df = pd.read_csv(CFG.captions_path)
-unique_imgs = df[['image']].drop_duplicates().reset_index(drop=True)
-
-def build_image_bank():
-    """
-    모든 이미지에 대해 임베딩 계산
-    """
+# 2) 임베딩 캐시 로드/생성
+CACHE_DIR = "cache"
+EMB_FILE = os.path.join(CACHE_DIR, "image_embeddings.npy")
+IMG_FILE = os.path.join(CACHE_DIR, "image_filenames.csv")
+if os.path.exists(EMB_FILE) and os.path.exists(IMG_FILE):
+    image_embeddings = np.load(EMB_FILE)
+    unique_imgs = pd.read_csv(IMG_FILE)
+else:
+    df = pd.read_csv(CFG.captions_path)
+    unique_imgs = df[['image']].drop_duplicates().reset_index(drop=True)
     embs = []
     for fn in tqdm(unique_imgs['image'], desc="Embedding Images"):
         img = Image.open(os.path.join(CFG.image_path, fn)).convert("RGB")
@@ -40,33 +39,36 @@ def build_image_bank():
             feat = model.image_encoder(tensor)
             emb = model.image_proj(feat).cpu().numpy().flatten()
         embs.append(emb)
-    return np.vstack(embs)
+    image_embeddings = np.vstack(embs)
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    np.save(EMB_FILE, image_embeddings)
+    unique_imgs.to_csv(IMG_FILE, index=False)
 
-image_embeddings = build_image_bank()
-
-def search(caption: str, top_k: int = 5):
-    """
-    입력 텍스트에 유사도가 높은 이미지 top_k개 반환
-    """
-    enc = tokenizer(caption, padding="max_length", truncation=True, max_length=CFG.max_length, return_tensors="pt")
+# 3) 검색 함수 (고정 Top-6)
+def search(caption: str):
+    enc = tokenizer(caption, padding="max_length", truncation=True,
+                     max_length=CFG.max_length, return_tensors="pt")
     input_ids = enc.input_ids.to(CFG.device)
     attention_mask = enc.attention_mask.to(CFG.device)
     with torch.no_grad():
         txt_feat = model.text_encoder(input_ids, attention_mask)
         txt_emb = model.text_proj(txt_feat).cpu().numpy().flatten()
-    sims = image_embeddings @ txt_emb / (np.linalg.norm(image_embeddings,axis=1) * np.linalg.norm(txt_emb))
-    idxs = np.argsort(-sims)[:top_k]
-    imgs = [Image.open(os.path.join(CFG.image_path, unique_imgs.filename[i])) for i in idxs]
+    sims = image_embeddings @ txt_emb / (
+        np.linalg.norm(image_embeddings, axis=1) * np.linalg.norm(txt_emb)
+    )
+    idxs = np.argsort(-sims)[:6]
+    imgs = [Image.open(os.path.join(CFG.image_path, unique_imgs['image'][i])) for i in idxs]
     return imgs
 
-# Gradio 인터페이스 정의
-iface = gr.Interface(
-    fn=search,
-    inputs=[gr.Textbox(label="Caption 입력"), gr.Slider(1,10,value=5,label="Top K")],
-    outputs=gr.Gallery(label="검색 결과"),
-    title="표정 설명 기반 이미지 검색",
-    theme=XKCD()
-)
+# 4) Blocks 레이아웃으로 UI 구성 및 스타일링
+with gr.Blocks(theme="gstaff/xkcd") as demo:
+    gr.Markdown("# 🎭 표정 설명 기반 이미지 검색", elem_id="title")
+    with gr.Row():
+        txt = gr.Textbox(label="Caption 입력", placeholder="예: happy smiling face", lines=2)
+        btn = gr.Button("검색", variant="primary")
+    gallery = gr.Gallery(label="검색 결과", columns=6, height="auto")
+    btn.click(search, inputs=txt, outputs=gallery)
+    gr.HTML("<div style='margin-top:20px; color:gray; font-size:12px;'>Powered by CLIP & DistilBERT</div>")
 
 if __name__ == "__main__":
-    iface.launch()
+    demo.launch()
