@@ -1,6 +1,6 @@
 # Facial Expression Text-Image Zero-Shot Retrieval 
 
-![Demo](https://github.com/cozyrim/emotion-retriever/blob/main/assets/demogui.gif)
+![Poster](https://github.com/cozyrim/emotion-retriever/blob/main/assets/demogui.gif)
 
  **제로샷 학습(Zero-Shot Learning)** 기반의 **CLIP(Contrastive Language-Image Pre-training)** 모델을 활용하여 <br/>
 텍스트로 묘사한 얼굴 표정과 이미지 간의 관계를 분석하고 실시간으로 관련 이미지를 검색할 수 있는 GUI를 제공합니다.
@@ -24,7 +24,7 @@
 
 자세한 내용과 실험 결과는 첨부된 논문 PDF를 참고하세요.
 
-📕 [논문 PDF 다운로드](./paper.pdf)
+📕 [논문 PDF 다운로드](https://github.com/cozyrim/emotion-retriever/blob/main/assets/%5B%EB%A9%80%ED%8B%B0%ED%95%99%ED%9A%8C%ED%95%99%EC%88%A0%EB%B0%9C%ED%91%9C%EB%8C%80%ED%9A%8C%5D%EC%A0%9C%EB%A1%9C%EC%83%B7%ED%95%99%EC%8A%B5%EC%9D%84%20%ED%86%B5%ED%95%9C%20%EC%96%BC%EA%B5%B4%20%ED%91%9C%EC%A0%95%20%EC%9D%B4%EB%AF%B8%EC%A7%80%EC%99%80%20%ED%85%8D%EC%8A%A4%ED%8A%B8%EC%9D%98%20%EA%B4%80%EA%B3%84.pdf)
 
 ---
 
@@ -81,6 +81,12 @@ python demo.py
 
 예시:
 > An expression of shock and astonishment.
+
+---
+
+### 📸 GUI 시연 GIF
+
+![Demo](https://github.com/cozyrim/emotion-retriever/blob/main/assets/demogui.gif)
 
 ---
 
