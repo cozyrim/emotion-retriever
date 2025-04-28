@@ -102,7 +102,7 @@ python demo.py
   <img
     src="assets/poster.png"
     alt="Poster"
-    width="400" />
+    width="500" />
 </p>
 
 ---
