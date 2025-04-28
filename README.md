@@ -1,6 +1,13 @@
 # Facial Expression Text-Image Zero-Shot Retrieval 
 
-![Poster](https://github.com/cozyrim/emotion-retriever/blob/main/assets/demogui.gif)
+<p align="center">
+  <img
+    src="https://raw.githubusercontent.com/cozyrim/emotion-retriever/main/assets/추계학술발표대회%20포스터.png"
+    alt="Poster"
+    width="400"
+  />
+</p>
+
 
  **제로샷 학습(Zero-Shot Learning)** 기반의 **CLIP(Contrastive Language-Image Pre-training)** 모델을 활용하여 <br/>
 텍스트로 묘사한 얼굴 표정과 이미지 간의 관계를 분석하고 실시간으로 관련 이미지를 검색할 수 있는 GUI를 제공합니다.
