@@ -17,7 +17,7 @@ class ImageEncoder(nn.Module):
         # num_classes=0, global_pool="avg" -> feature vector 출력
         # timm 라이브러리로 사전학습된 ResNet50 모델 생성
         self.backbone = timm.create_model(
-            CFG.model_name, pretrained=CFG.pretrained, num_classes=0, global_pool="avg"
+            CFG.model_name, pretrained=CFG.pretrained, num_classes=0, global_pool="avg" # global_pool은 모델 최종 출력(Feature vector) 위해 1차원 벡터로 평평하게함함
         )
         # 파라미터 미세조정 여부 설정 (True면 학습 가능)
         for p in self.backbone.parameters():
@@ -48,7 +48,7 @@ class TextEncoder(nn.Module):
         # 모델에 input_ids와 attention_mask 입력하여 출력 획득
         out = self.model(input_ids=input_ids, attention_mask=attention_mask)
         # CLS 토큰 벡터 (batch, hidden_dim) 추출하여 반환
-        return out.last_hidden_state[:, 0]
+        return out.last_hidden_state[:, 0] # 배치 안 모든 데이터 중 0번 토큰만 뽑겠다 == CLS 토큰 벡터만 추출
 
 # 임베딩 차원 사영을 위한 프로젝션 헤드: Linear -> GELU -> Dropout
 class ProjectionHead(nn.Module):
@@ -74,9 +74,10 @@ class CLIPModel(nn.Module):
     def __init__(self):
         super().__init__()
         # 이미지 인코더 및 프로젝션 헤드 생성
-        self.image_encoder = ImageEncoder()
-        img_dim = self.image_encoder.backbone.num_features  # backbone 출력 차원 획득
-        self.image_proj = ProjectionHead(img_dim)  # 이미지 임베딩 변환기 생성
+        self.image_encoder = ImageEncoder() # 이미지를 feature vector로 변환하는 CNN 백본(ResNet50 등)
+        img_dim = self.image_encoder.backbone.num_features  # backbone 출력 차원 획득 
+        self.image_proj = ProjectionHead(img_dim)  # 이미지 임베딩 변환기 생성 이미지 feature vector를 더 학습하기 좋은 공간으로 변환합니다.
+#                                                       차원을 줄이거나 변형하는 Projection Head.
         # 텍스트 인코더 및 프로젝션 헤드 생성
         self.text_encoder = TextEncoder()
         # hidden_size가 필요하지만 없으면 projection_dim fallback

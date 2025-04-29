@@ -28,7 +28,7 @@ else:
     df = pd.read_csv(CFG.captions_path)
     unique_imgs = df[['image']].drop_duplicates().reset_index(drop=True)
     embs = []
-    for fn in tqdm(unique_imgs['image'], desc="Embedding Images"):
+    for fn in tqdm(unique_imgs['image'], desc="Embedding Images"): # 이미지 불러와 전처리
         img = Image.open(os.path.join(CFG.image_path, fn)).convert("RGB")
         arr = np.array(img)
         tensor = (
@@ -38,7 +38,7 @@ else:
             .float()
             .to(CFG.device)
         )
-        with torch.no_grad():
+        with torch.no_grad(): # 이미지 feature 뽑기 (추론모드)
             feat = model.image_encoder(tensor)
             embs.append(model.image_proj(feat).cpu().numpy().flatten())
     image_embeddings = np.vstack(embs)
@@ -48,24 +48,24 @@ else:
 
 # 3) 검색 함수 (Top-6)
 def search(caption: str):
-    enc = tokenizer(
+    enc = tokenizer( # 텍스트 토크나이징
         caption,
         padding="max_length", truncation=True,
         max_length=CFG.max_length,
         return_tensors="pt"
     )
-    with torch.no_grad():
+    with torch.no_grad(): # 텍스트 임베딩 만들기
         txt_feat = model.text_encoder(
             enc.input_ids.to(CFG.device),
             enc.attention_mask.to(CFG.device)
         )
-        txt_emb = model.text_proj(txt_feat).cpu().numpy().flatten()
+        txt_emb = model.text_proj(txt_feat).cpu().numpy().flatten() # 이미지 임베딩들과 유사도 계산
     sims = image_embeddings @ txt_emb / (
         np.linalg.norm(image_embeddings, axis=1) * np.linalg.norm(txt_emb)
     )
-    idxs = np.argsort(-sims)[:6]
+    idxs = np.argsort(-sims)[:6] # 유사도 기준으로 Top-6 이미지 선택
     return [
-        Image.open(os.path.join(CFG.image_path, unique_imgs['image'][i]))
+        Image.open(os.path.join(CFG.image_path, unique_imgs['image'][i])) # 실제 이미지 파일 열기
         for i in idxs
     ]
 
