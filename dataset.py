@@ -68,8 +68,8 @@ def build_loaders(df_train: pd.DataFrame, df_valid: pd.DataFrame, tokenizer: Dis
     """
     train_ds = CLIPDataset(df_train, get_transforms(train=True), tokenizer)
     valid_ds = CLIPDataset(df_valid, get_transforms(train=False), tokenizer)
-    train_loader = DataLoader(train_ds, batch_size=CFG.batch_size, shuffle=True, num_workers=CFG.num_workers)
-    valid_loader = DataLoader(valid_ds, batch_size=CFG.batch_size, shuffle=False, num_workers=CFG.num_workers)
+    train_loader = DataLoader(train_ds, batch_size=CFG.batch_size, shuffle=True, num_workers=CFG.num_workers) # DataLoader는 Pytorch에서 
+    valid_loader = DataLoader(valid_ds, batch_size=CFG.batch_size, shuffle=False, num_workers=CFG.num_workers) # 데이터를 배치 단위로 묶어주는 역할
     return train_loader, valid_loader
 
 
