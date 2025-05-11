@@ -7,7 +7,7 @@
 
 
 
-## 📸 GUI 시연 GIF
+## 📸 데모 시연
 
 <p align="center">
   <img
