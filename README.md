@@ -2,7 +2,7 @@
   Facial Expression Text-Image Zero-Shot Retrieval
 </h1>
 
-  **제로샷 학습(Zero-Shot Learning)** 을 기반으로 한 **CLIP(Contrastive Language-Image Pre-training)** 모델을 활용하여 얼굴 표정 이미지 검색을 합니다.<br/>
+  **제로샷 학습(Zero-Shot Learning)** 을 기반으로 한 **CLIP(Contrastive Language-Image Pre-training)** 모델을 활용하여 얼굴 표정 이미지 검색<br/>
   논문 연구을 GUI 형태로 구현하여 실제 텍스트 입력으로 이미지를 실시간 검색
 
 
