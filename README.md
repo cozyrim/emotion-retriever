@@ -7,7 +7,7 @@
 
 
 
-## 📸 데모 시연
+## 데모 시연
 
 <p align="center">
   <img
@@ -18,7 +18,7 @@
 
 
 
-## 📄 논문 개요
+## 논문 개요
 
 **제목**: 제로샷 학습을 통한 얼굴 표정 이미지와 텍스트의 관계 추론   
 **저자**: Chaerim Han, Deokwoo Lee  
@@ -38,13 +38,13 @@
 
 자세한 내용과 실험 결과는 첨부된 논문 PDF를 참고하세요.
 
-📕 [논문 PDF 다운로드](assets/papers.pdf)
+ [논문 PDF 다운로드](assets/papers.pdf)
 
 
 
 
 
-## 🚀 프로젝트 구조
+## 프로젝트 구조
 
 ```
 .
@@ -91,14 +91,14 @@ pip install -r requirements.txt
 python demo.py
 ```
 
-브라우저에서 `http://127.0.0.1:7860` 접속 후,  
+ 
 텍스트로 얼굴 표정을 묘사하여 이미지 검색을 수행
 
 예시:
 > An expression of shock and astonishment.
 
 
-## 🖼️ 학술대회 발표 포스터  
+## 학술대회 발표 포스터  
 <p align="center">
   <img
     src="assets/poster.png"
